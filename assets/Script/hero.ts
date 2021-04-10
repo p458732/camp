@@ -1,10 +1,9 @@
-import Main from './main';
+import Main from "./main";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Hero extends cc.Component {
-
   @property(Main)
   private gameManager: Main = null;
 
@@ -14,9 +13,7 @@ export default class Hero extends cc.Component {
 
   private stepY: number = 0;
 
-
-
-  async onLoad() { }
+  async onLoad() {}
 
   public setStep(x: number, y: number) {
     this.stepX = x;
@@ -24,14 +21,15 @@ export default class Hero extends cc.Component {
   }
 
   /**
- * 碰撞產生時調用
- * @param  {Collider} other 
- * @param  {Collider} self  
- */
+   * 碰撞產生時調用
+   * @param  {Collider} other
+   * @param  {Collider} self
+   */
   onCollisionEnter(other, self) {
     if (other.node.group === "Score") {
       this.gameManager.addScore(other.node.getComponent("score").scoreNum);
-      other.node.removeFromParent();
+      this.gameManager.resetScores();
+      other.node.opacity = 0;
     }
   }
 

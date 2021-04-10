@@ -41,8 +41,7 @@ export default class Main extends cc.Component {
   // 學員控制
   async move() {
     for (let i = 0; i < 24; i++) {
-      if (i >= 18)
-        await this.hero.getComponent("hero").leftMove();
+      if (i >= 18) await this.hero.getComponent("hero").leftMove();
       else if (i >= 13) {
         await this.hero.getComponent("hero").downMove();
       } else {
@@ -56,19 +55,36 @@ export default class Main extends cc.Component {
     this.ScoreLabel.string = `Score: ${this.totalScore}`;
   }
 
+  public resetScores() {
+    this.scores.children.forEach((singleScore) => {
+      singleScore.opacity = 255;
+    });
+  }
   // 生成分數位置
   private generateScores() {
     const startPos: cc.Vec3 = this.hero.position;
     for (let i = 1; i < 25; i++) {
-      const score = cc.instantiate(this.scorePrefab)
-      const type = (i % 9 === 0) ? 1 : 0;
+      const score = cc.instantiate(this.scorePrefab);
+      const type = i % 9 === 0 ? 1 : 0;
       score.getComponent("score").setType(type);
       if (i < 14)
-        score.position = new cc.Vec3(startPos.x + this.stepX * i, startPos.y, startPos.z)
+        score.position = new cc.Vec3(
+          startPos.x + this.stepX * i,
+          startPos.y,
+          startPos.z
+        );
       else if (i < 19)
-        score.position = new cc.Vec3(startPos.x + 13 * this.stepX, startPos.y - this.stepY * (i - 13), startPos.z)
+        score.position = new cc.Vec3(
+          startPos.x + 13 * this.stepX,
+          startPos.y - this.stepY * (i - 13),
+          startPos.z
+        );
       else
-        score.position = new cc.Vec3(startPos.x + (31 - i) * this.stepX, startPos.y - this.stepY * 5, startPos.z)
+        score.position = new cc.Vec3(
+          startPos.x + (31 - i) * this.stepX,
+          startPos.y - this.stepY * 5,
+          startPos.z
+        );
       this.scores.addChild(score);
     }
   }
