@@ -1,29 +1,48 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
+import Main from './main';
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Hero extends cc.Component {
-  // LIFE-CYCLE CALLBACKS:
 
-  @property(cc.Node)
-  hero: cc.Node = null;
+  @property(Main)
+  private gameManager: Main = null;
+
   private anim: cc.Animation;
-  async onLoad() {}
 
-  start() {}
+  private stepX: number = 0;
+
+  private stepY: number = 0;
+
+
+
+  async onLoad() { }
+
+  public setStep(x: number, y: number) {
+    this.stepX = x;
+    this.stepY = y;
+  }
+
+  /**
+ * 碰撞產生時調用
+ * @param  {Collider} other 
+ * @param  {Collider} self  
+ */
+  onCollisionEnter(other, self) {
+    if (other.node.group === "Score") {
+      this.gameManager.addScore(other.node.getComponent("score").scoreNum);
+      other.node.removeFromParent();
+    }
+  }
+
   async rightMove() {
     return new Promise((resolve, reject) => {
       this.anim = this.node.getComponent(cc.Animation);
 
       this.anim.play("right");
-      cc.tween(this.hero)
-        .to(1, { position: cc.v3(this.node.x + 50, this.node.y, 0) })
+      cc.tween(this.node)
+        .to(0.5, { position: cc.v3(this.node.x + this.stepX, this.node.y, 0) })
+        .delay(0.5)
         .call(() => {
           resolve(0);
         })
@@ -35,8 +54,9 @@ export default class Hero extends cc.Component {
       this.anim = this.node.getComponent(cc.Animation);
 
       this.anim.play("down");
-      cc.tween(this.hero)
-        .to(1, { position: cc.v3(this.node.x, this.node.y - 50, 0) })
+      cc.tween(this.node)
+        .to(0.5, { position: cc.v3(this.node.x, this.node.y - this.stepY, 0) })
+        .delay(0.5)
         .call(() => {
           resolve(0);
         })
@@ -48,8 +68,9 @@ export default class Hero extends cc.Component {
       this.anim = this.node.getComponent(cc.Animation);
 
       this.anim.play("up");
-      cc.tween(this.hero)
-        .to(1, { position: cc.v3(this.node.x, this.node.y - 50, 0) })
+      cc.tween(this.node)
+        .to(0.5, { position: cc.v3(this.node.x, this.node.y + this.stepY, 0) })
+        .delay(0.5)
         .call(() => {
           resolve(0);
         })
@@ -61,8 +82,9 @@ export default class Hero extends cc.Component {
       this.anim = this.node.getComponent(cc.Animation);
 
       this.anim.play("left");
-      cc.tween(this.hero)
-        .to(1, { position: cc.v3(this.node.x, this.node.y - 50, 0) })
+      cc.tween(this.node)
+        .to(0.5, { position: cc.v3(this.node.x - this.stepX, this.node.y, 0) })
+        .delay(0.5)
         .call(() => {
           resolve(0);
         })
