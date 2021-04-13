@@ -40,12 +40,11 @@ export default class Main extends cc.Component {
 
   // 學員控制
   async move() {
-    for (let i = 0; i < 24; i++) {
-      if (i >= 18) await this.hero.getComponent("hero").leftMove();
-      else if (i >= 13) {
-        await this.hero.getComponent("hero").downMove();
+    for (let time = 0; time < 10; time = time + 1) {
+      if (time === 5) {
+        await this.downMove();
       } else {
-        await this.hero.getComponent("hero").rightMove();
+        await this.rightMove();
       }
     }
   }
@@ -87,5 +86,17 @@ export default class Main extends cc.Component {
         );
       this.scores.addChild(score);
     }
+  }
+  private async rightMove() {
+    await this.hero.getComponent("hero").rightMove();
+  }
+  private async upMove() {
+    await this.hero.getComponent("hero").upMove();
+  }
+  private async downMove() {
+    await this.hero.getComponent("hero").downMove();
+  }
+  private async leftMove() {
+    await this.hero.getComponent("hero").leftMove();
   }
 }
